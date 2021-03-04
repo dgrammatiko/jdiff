@@ -1,11 +1,11 @@
-const { stat, ensureDir, remove } = require('fs-extra');
+const { stat, ensureDir, ensureDirSync, removeSync } = require('fs-extra');
 const {execSync} = require('child_process')
 const { sep } = require('path');
 const recursive = require('recursive-readdir');
 const degit = require('tiged');
 
 // Clone 3.10
-ensureDir('joomla_310');
+ensureDirSync('joomla_310');
 execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
 
 const NonDeliverables = [
@@ -40,14 +40,14 @@ const NonDeliverables = [
 
 ];
 
-NonDeliverables.map(file => remove(`${process.cwd()}/joomla_310/${file}`));
+NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_310/${file}`));
 
 // Clone J4
-ensureDir('joomla_400');
+ensureDirSync('joomla_400');
 execSync(`git clone --depth 1 --branch 4.0-dev https://github.com/joomla/joomla-cms.git joomla_400`);
 
-NonDeliverables.map(file => remove(`${process.cwd()}/joomla_400/${file}`));
+NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_400/${file}`));
 
-// execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
+execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
 execSync(`cd joomla_400 && npm ci`);
 
