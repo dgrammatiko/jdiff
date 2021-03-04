@@ -1,4 +1,4 @@
-const { stat, ensureDir, ensureDirSync, removeSync } = require('fs-extra');
+const { stat, ensureDir, ensureDirSync, removeSync, writeFileSync } = require('fs-extra');
 const {execSync} = require('child_process')
 const { sep } = require('path');
 const recursive = require('recursive-readdir');
@@ -11,7 +11,6 @@ execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla
 const NonDeliverables = [
   '.git',
   '.github',
-  // 'build',
   'tests',
   '.appveyor.yml',
   '.drone.jsonnet',
@@ -22,8 +21,7 @@ const NonDeliverables = [
   'appveyor-phpunit.xml',
   'CODE_OF_CONDUCT.md',
   'codeception.yml',
-  // 'composer.json',
-  // 'composer.lock',
+
   'crowdin.yml',
   'jenkins-phpunit.xml',
   'Jenkinsfile',
@@ -34,11 +32,17 @@ const NonDeliverables = [
   'RoboFile.php',
   '.php_cs.dist',
   'build.xml',
-  // 'package-lock.json',
-  // 'package.json',
-  'phpunit-pgsql.xml.dist',
 
+  'phpunit-pgsql.xml.dist',
 ];
+const NonDeliverables2 = [
+  'build',
+  'composer.json',
+  'composer.lock',
+  'package-lock.json',
+  'package.json',
+];
+
 
 NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_310/${file}`));
 
@@ -51,3 +55,14 @@ NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_400/${file}`));
 execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
 execSync(`cd joomla_400 && npm ci`);
 
+// Remove more files
+// NonDeliverables2.map(file => removeSync(`${process.cwd()}/joomla_310/${file}`));
+// NonDeliverables2.map(file => removeSync(`${process.cwd()}/joomla_400/${file}`));
+
+J3Files = [];
+J4Files = [];
+
+recursive(`${process.cwd()}/joomla_310`).then(files => J3Files.push(files));
+recursive(`${process.cwd()}/joomla_400`).then(files => J4Files.push(files));
+
+writeFileSync('allFiles.json', JSON.stringify({ '310': J3Files, '40': J4Files}), ()=> {});
