@@ -2,7 +2,17 @@ const { stat, ensureDir, ensureDirSync, removeSync, writeFileSync } = require('f
 const {execSync} = require('child_process')
 const { sep } = require('path');
 const recursive = require('recursive-readdir');
-const degit = require('tiged');
+
+const Redundant = [];
+let J3FilesN = [];
+function checkFile(file) {
+  if (J4Files.includes(file)) {
+    console.log(file, J4Files.includes(file))
+    J3FilesN = J3Files.filter(item => item !== file)
+  } else {
+    Redundant.push(file);
+  }
+};
 
 // Clone 3.10
 ensureDirSync('joomla_310');
@@ -65,13 +75,17 @@ let J4Files;
 recursive(`joomla_310`, function (err, files) {
   // `files` is an array of file paths
   console.log(files);
-  J3Files = files
+  J3Files = files.map(file => file.replace(`joomla_310${sep}`, ''))
 
   recursive(`joomla_400`, function (err, files) {
     // `files` is an array of file paths
     console.log(files);
-    J4Files = files
-  });
+    J4Files = files.map(file => file.replace(`joomla_400${sep}`, ''))
+    J3Files.forEach(file => checkFile(file))
 
-  writeFileSync('allFiles.json', JSON.stringify({ '310': J3Files, '40': J4Files}), ()=> {});
+    writeFileSync('J3Files.json', JSON.stringify(J3Files, '', 2), ()=> {});
+    writeFileSync('J4Files.json', JSON.stringify(J4Files, '', 2), ()=> {});
+    writeFileSync('Redundant.json', JSON.stringify(Redundant, '', 2), ()=> {});
+    writeFileSync('jjjjjj.json', JSON.stringify(J3FilesN, '', 2), ()=> {});
+  });
 });
