@@ -17,7 +17,7 @@ function checkFile(file) {
     const fileStat = stat(dir, (err, stats) => {
       if (err) return false;
       if (stats && stats.isDirectory()) {
-        fs.readdir(dir, function(err, files) {
+        return fs.readdir(dir, function(err, files) {
           if (err) {
             console.log(`Directory ${dir}`);
             return false;
@@ -25,6 +25,7 @@ function checkFile(file) {
             if (!files.length) {
               return true;
             }
+            return false;
           }
         });
       }
