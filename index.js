@@ -1,9 +1,10 @@
 const { stat, ensureDir, ensureDirSync, removeSync, writeFileSync } = require('fs-extra');
 const {execSync} = require('child_process')
-const { sep } = require('path');
+const { sep, dirname } = require('path');
 const recursive = require('recursive-readdir');
 
 const Redundant = [];
+const RedundantFolders = [];
 let J3FilesN = [];
 function checkFile(file) {
   if (J4Files.includes(file)) {
@@ -11,6 +12,12 @@ function checkFile(file) {
     J3FilesN = J3Files.filter(item => item !== file)
   } else {
     Redundant.push(file);
+
+    const dir = dirname(file);
+    const fileStat = stat(dir);
+    if (!fileStat || !fileStat.isDirectory()) {
+      RedundantFolders.push(dir)
+    }
   }
 };
 
@@ -71,6 +78,7 @@ NonDeliverables2.map(file => removeSync(`${process.cwd()}/joomla_400/${file}`));
 
 let J3Files;
 let J4Files;
+let J4Folders;
 
 recursive(`joomla_310`, function (err, files) {
   // `files` is an array of file paths
@@ -86,6 +94,7 @@ recursive(`joomla_310`, function (err, files) {
     writeFileSync('J3Files.json', JSON.stringify(J3Files, '', 2), ()=> {});
     writeFileSync('J4Files.json', JSON.stringify(J4Files, '', 2), ()=> {});
     writeFileSync('Redundant.json', JSON.stringify(Redundant, '', 2), ()=> {});
+    writeFileSync('RedundantFolders.json', JSON.stringify(RedundantFolders, '', 2), ()=> {});
     writeFileSync('jjjjjj.json', JSON.stringify(J3FilesN, '', 2), ()=> {});
   });
 });
