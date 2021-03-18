@@ -1,4 +1,4 @@
-const { access, stat, existsSync, removeSync, writeFileSync } = require('fs-extra');
+const { access, stat, ensureDirSync, existsSync, removeSync, writeFileSync } = require('fs-extra');
 const {execSync} = require('child_process');
 const emptyDir = require('empty-dir');
 const { sep, dirname } = require('path');
