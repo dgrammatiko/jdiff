@@ -94,3 +94,5 @@ recursive(`joomla_310`, function (err, files) {
     writeFileSync('jjjjjj.json', JSON.stringify(J3FilesN, '', 2), ()=> {});
   });
 });
+
+// test
