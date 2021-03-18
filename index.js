@@ -58,6 +58,13 @@ const NonDeliverables = [
   'package.json',
 ];
 
+// Clean existing repo files
+removeSync('Redundant.json');
+removeSync('RedundantFolders.json');
+removeSync('J3Files.json');
+removeSync('J4Files.json');
+removeSync('jjjjjj.json');
+
 // Clone 3.10
 ensureDirSync('joomla_310');
 execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
