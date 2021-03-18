@@ -1,5 +1,6 @@
-const { stat, ensureDirSync, removeSync, writeFileSync } = require('fs-extra');
-const {execSync} = require('child_process')
+const { access, stat, existsSync, removeSync, writeFileSync } = require('fs-extra');
+const {execSync} = require('child_process');
+const emptyDir = require('empty-dir');
 const { sep, dirname } = require('path');
 const recursive = require('recursive-readdir');
 
@@ -13,29 +14,12 @@ function checkFile(file) {
   } else {
     Redundant.push(file);
 
-    const dir = dirname(file);
-    const fileStat = stat(dir, (err, stats) => {
-      if (err) return false;
-      if (stats && stats.isDirectory()) {
-        return fs.readdir(dir, function(err, files) {
-          if (err) {
-            console.log(`Directory ${dir}`);
-            return false;
-          } else {
-            if (!files.length) {
-              return true;
-            }
-            return false;
-          }
-        });
-      }
-    });
-
-    if (!fileStat || !fileStat.isDirectory()) {
-      if (!RedundantFolders.includes(dir)) {
-        RedundantFolders.push(dir)
-      }
+    if (!existsSync(dirname(`${process.cwd()}/joomla_400/${file}`)) && !RedundantFolders.includes(dirname(file))) {
+      RedundantFolders.push(dirname(file))
+    } else if (emptyDir.sync(dirname(`${process.cwd()}/joomla_400/${file}`)) && !RedundantFolders.includes(dirname(file))) {
+      RedundantFolders.push(dirname(file))
     }
+
   }
 };
 
@@ -76,16 +60,16 @@ const NonDeliverables = [
 
 
 // Clone 3.10
-ensureDirSync('joomla_310');
-execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
+// ensureDirSync('joomla_310');
+// execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
 
 // Clone J4
-ensureDirSync('joomla_400');
-execSync(`git clone --depth 1 --branch 4.0-dev https://github.com/joomla/joomla-cms.git joomla_400`);
+// ensureDirSync('joomla_400');
+// execSync(`git clone --depth 1 --branch 4.0-dev https://github.com/joomla/joomla-cms.git joomla_400`);
 
-// Build j4
-execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
-execSync(`cd joomla_400 && npm ci`);
+// // Build j4
+// execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
+// execSync(`cd joomla_400 && npm ci`);
 
 // Remove some non deliverable files
 NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_310/${file}`));
@@ -94,7 +78,6 @@ NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_400/${file}`));
 
 let J3Files;
 let J4Files;
-let J4Folders;
 
 recursive(`joomla_310`, function (err, files) {
 //   console.log(files);

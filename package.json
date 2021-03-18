@@ -22,6 +22,7 @@
     "recursive-readdir": "^2.2.2"
   },
   "devDependencies": {
+    "empty-dir": "^2.0.0",
     "tiged": "2.10.2"
   }
 }
