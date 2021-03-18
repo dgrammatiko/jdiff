@@ -16,11 +16,24 @@ function checkFile(file) {
     const dir = dirname(file);
     const fileStat = stat(dir, (err, stats) => {
       if (err) return false;
-      if (stats && stats.isDirectory()) return true;
+      if (stats && stats.isDirectory()) {
+        fs.readdir(dir, function(err, files) {
+          if (err) {
+            console.log(`Directory ${dir}`);
+            return false;
+          } else {
+            if (!files.length) {
+              return true;
+            }
+          }
+        });
+      }
     });
 
     if (!fileStat || !fileStat.isDirectory()) {
-      RedundantFolders.push(dir)
+      if (!RedundantFolders.includes(dir)) {
+        RedundantFolders.push(dir)
+      }
     }
   }
 };
