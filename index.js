@@ -1,4 +1,4 @@
-const { stat, ensureDir, ensureDirSync, removeSync, writeFileSync } = require('fs-extra');
+const { stat, ensureDirSync, removeSync, writeFileSync } = require('fs-extra');
 const {execSync} = require('child_process')
 const { sep, dirname } = require('path');
 const recursive = require('recursive-readdir');
@@ -14,7 +14,11 @@ function checkFile(file) {
     Redundant.push(file);
 
     const dir = dirname(file);
-    const fileStat = stat(dir);
+    const fileStat = stat(dir, (err, stats) => {
+      if (err) return false;
+      if (stats && stats.isDirectory()) return true;
+    });
+
     if (!fileStat || !fileStat.isDirectory()) {
       RedundantFolders.push(dir)
     }
@@ -48,7 +52,7 @@ const NonDeliverables = [
   'build.xml',
 
   'phpunit-pgsql.xml.dist',
-  
+
   'build',
   'composer.json',
   'composer.lock',
