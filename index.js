@@ -58,18 +58,17 @@ const NonDeliverables = [
   'package.json',
 ];
 
-
 // Clone 3.10
-// ensureDirSync('joomla_310');
-// execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
+ensureDirSync('joomla_310');
+execSync(`git clone --depth 1 --branch 3.10-dev https://github.com/joomla/joomla-cms.git joomla_310`);
 
 // Clone J4
-// ensureDirSync('joomla_400');
-// execSync(`git clone --depth 1 --branch 4.0-dev https://github.com/joomla/joomla-cms.git joomla_400`);
+ensureDirSync('joomla_400');
+execSync(`git clone --depth 1 --branch 4.0-dev https://github.com/joomla/joomla-cms.git joomla_400`);
 
 // // Build j4
-// execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
-// execSync(`cd joomla_400 && npm ci`);
+execSync(`cd joomla_400 && composer install --ignore-platform-reqs`);
+execSync(`cd joomla_400 && npm ci`);
 
 // Remove some non deliverable files
 NonDeliverables.map(file => removeSync(`${process.cwd()}/joomla_310/${file}`));
@@ -85,7 +84,6 @@ recursive(`joomla_310`, function (err, files) {
 
   recursive(`joomla_400`, function (err, files) {
     // `files` is an array of file paths
-//     console.log(files);
     J4Files = files.sort().map(file => file.replace(`joomla_400${sep}`, ''))
     J3Files.forEach(file => checkFile(file))
 
