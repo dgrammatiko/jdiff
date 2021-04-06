@@ -3538,6 +3538,7 @@
   "libraries/vendor/joomla/compat/src/CallbackFilterIterator.php",
   "libraries/vendor/joomla/compat/src/JsonSerializable.php",
   "libraries/vendor/joomla/event/src/DelegatingDispatcher.php",
+  "libraries/vendor/joomla/filesystem/src/Stream/String.php",
   "libraries/vendor/joomla/image/LICENSE",
   "libraries/vendor/joomla/image/src/Filter/Backgroundfill.php",
   "libraries/vendor/joomla/image/src/Filter/Brightness.php",
