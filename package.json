@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "empty-dir": "2.0.0",
-    "tiged": "2.10.3"
+    "tiged": "2.10.4"
   }
 }
