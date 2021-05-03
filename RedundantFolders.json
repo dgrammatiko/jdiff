@@ -1099,6 +1099,7 @@
   "media/media/js",
   "media/overrider/css",
   "media/overrider/js",
+  "media/plg_system_highlight",
   "media/plg_twofactorauth_totp/js",
   "media/system/images/modal",
   "modules/mod_search",
